@@ -28,7 +28,7 @@ func main() {
 	// environment values.
 	err = godotenv.Load(envName)
 	if err != nil {
-		log.Fatal("Failed to load environment file: %v", err)
+		log.Fatalf("Failed to load environment file: %v", err)
 	}
 
 	// Load protokollamt configuration file.
