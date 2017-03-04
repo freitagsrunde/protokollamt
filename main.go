@@ -32,7 +32,7 @@ func main() {
 	}
 
 	// Load protokollamt configuration file.
-	_, err = config.LoadConfig(configName, os.Getenv("DB_PASSWORD"), os.Getenv("MAIL_PASSWORD"))
+	config, err := config.LoadConfig(configName, os.Getenv("DB_PASSWORD"), os.Getenv("MAIL_PASSWORD"))
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
@@ -41,6 +41,12 @@ func main() {
 	// connection, and mail sending capabilities.
 
 	// Initialize routes.
+	router := config.DefineRoutes()
 
 	// Run application.
+	log.Printf("Protokollamt awaiting requests on %s.\n", config.PublicAddr)
+	err = router.Run(config.PublicAddr)
+	if err != nil {
+		log.Fatalf("Running protokollamt failed: %v", err)
+	}
 }

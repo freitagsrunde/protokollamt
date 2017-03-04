@@ -1,3 +1,5 @@
+# DeployStage can be 'dev' or 'prod'.
+DeployStage = "dev"
 PublicAddr = "127.0.0.1:6020"
 ListenAddr = "127.0.0.1:6020"
 

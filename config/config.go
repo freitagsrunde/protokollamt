@@ -13,11 +13,12 @@ import (
 // Config contains all directives necessary to
 // run a protokollamt application.
 type Config struct {
-	PublicAddr string
-	ListenAddr string
-	Database   Database
-	LDAP       LDAP
-	Mail       Mail
+	DeployStage string
+	PublicAddr  string
+	ListenAddr  string
+	Database    Database
+	LDAP        LDAP
+	Mail        Mail
 }
 
 // Database specifies connection details to the
