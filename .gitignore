@@ -22,3 +22,8 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Repository-specific excludes
+.env
+protokollamt
+config.toml
