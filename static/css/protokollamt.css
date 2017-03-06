@@ -1,0 +1,32 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body { background-color: #fafafa; }
+
+main.container-fluid { margin: 0 15px; }
+.row { margin: 15px 0; }
+
+.row > [class*='col-'] {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.row > .space-right { padding-right: 15px; }
+.row > .space-left { padding-left: 15px; }
+.space-down { padding-bottom: 15px; }
+.small-space-right { padding-right: 7px; }
+
+.headline { margin-bottom: 25px; }
+
+.login-top-row { margin-top: 12%; }
+.login-header { padding: 0 0 5%; }
+
+#grayed-text { color: #999; }
+
+.dropdown-menu .no-space { margin: 0; }
+.table.with-bottomline { margin-bottom: 10px; }
+
+.center { text-align: center; }
+.right { text-align: right; }

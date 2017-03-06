@@ -9,8 +9,7 @@ import (
 func NotAuthorized() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		c.Redirect(http.StatusFound, "/protocols")
-		c.Abort()
+		c.Next()
 	}
 }
 

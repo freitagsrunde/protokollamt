@@ -12,19 +12,31 @@ import (
 	"gopkg.in/ldap.v2"
 )
 
+// LDAPService specifies what functionality
+// is needed to communicate with and authenticate
+// against configured LDAP service.
 type LDAPService interface {
 	GetServiceAddr() string
 	GetServerName() string
 	GetBindDN() string
 }
 
-func Index(c *gin.Context) {
+// Index delivers the first page of protokollamt,
+// a login form to authenticate via LDAP.
+func Index() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"PageTitle": "Protokollamt der Freitagsrunde",
+			"MainTitle": "Protokollamt",
+		})
+	}
 }
 
+// IndexLogin accepts user supplied LDAP credentials,
+// asks the LDAP service to verify them, and creates
+// a new session for respective user.
 func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
@@ -86,9 +98,14 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 	}
 }
 
-func IndexLogout(c *gin.Context) {
+// IndexLogout destroys the active session of
+// requesting user, logging the user out.
+func IndexLogout() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }

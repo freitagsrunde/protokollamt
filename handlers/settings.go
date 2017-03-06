@@ -6,51 +6,72 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Settings(c *gin.Context) {
+func Settings() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func SettingsRemovalsDelete(c *gin.Context) {
+func SettingsRemovalsDelete() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func SettingsReplacementsDelete(c *gin.Context) {
+func SettingsReplacementsDelete() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func SettingsRemovalsAdd(c *gin.Context) {
+func SettingsRemovalsAdd() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func SettingsRemovalsAddSubmit(c *gin.Context) {
+func SettingsRemovalsAddSubmit() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func SettingsReplacementsAdd(c *gin.Context) {
+func SettingsReplacementsAdd() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func SettingsReplacementsAddSubmit(c *gin.Context) {
+func SettingsReplacementsAddSubmit() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }

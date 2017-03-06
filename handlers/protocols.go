@@ -6,51 +6,72 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Protocols(c *gin.Context) {
+func Protocols() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func ProtocolsNew(c *gin.Context) {
+func ProtocolsNew() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func ProtocolsNewUpload(c *gin.Context) {
+func ProtocolsNewUpload() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func ProtocolsSingle(c *gin.Context) {
+func ProtocolsSingle() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func ProtocolsSingleChange(c *gin.Context) {
+func ProtocolsSingleChange() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func ProtocolsSingleReprocess(c *gin.Context) {
+func ProtocolsSingleReprocess() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
 
-func ProtocolsSinglePublish(c *gin.Context) {
+func ProtocolsSinglePublish() gin.HandlerFunc {
 
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "lol",
-	})
+	return func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"hello": "lol",
+		})
+	}
 }
