@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -58,7 +59,7 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 
 		// Bind with name of user and password supplied
 		// via validated login form values.
-		err = l.Bind("uid=USER,ou=users,dc=freitagsrunde,dc=org", "PASSWORD")
+		err = l.Bind(fmt.Sprintf("uid=%s,%s", "USER", ldapService.GetBindDN()), "PASSWORD")
 		if err != nil {
 
 			// Check if user supplied invalid credentials.
