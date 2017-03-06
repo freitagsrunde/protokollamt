@@ -3,12 +3,14 @@ package config
 // Config contains all directives necessary to
 // run a protokollamt application.
 type Config struct {
-	DeployStage string
-	PublicAddr  string
-	ListenAddr  string
-	Database    Database
-	LDAP        LDAP
-	Mail        Mail
+	DeployStage   string
+	PublicAddr    string
+	ListenAddr    string
+	JWTSignSecret string `toml:"-"`
+	Database      Database
+	LDAP          LDAP
+	Mail          Mail
+	Sessions      []UserSession
 }
 
 // Database specifies connection details to the
@@ -35,6 +37,13 @@ type Mail struct {
 	ServiceAddr string
 	User        string
 	Password    string `toml:"-"`
+}
+
+// UserSession represents an active authenticated
+// session of an user in protokollamt.
+type UserSession struct {
+	ID   string
+	Name string
 }
 
 // Define a receiver to retrieve the config's

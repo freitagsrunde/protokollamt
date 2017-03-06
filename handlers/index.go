@@ -8,7 +8,9 @@ import (
 	"crypto/tls"
 	"net/http"
 
+	//"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"gopkg.in/ldap.v2"
 )
 
@@ -19,6 +21,14 @@ type LDAPService interface {
 	GetServiceAddr() string
 	GetServerName() string
 	GetBindDN() string
+}
+
+// LoginPayload represents the values an user
+// can supply to protokollamt in order to
+// authenticate against configured LDAP.
+type LoginPayload struct {
+	Name     string `form:"login-name"`
+	Password string `form:"login-password"`
 }
 
 // Index delivers the first page of protokollamt,
@@ -41,13 +51,34 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
+		var Payload LoginPayload
+
+		// Parse login form data into above defined payload.
+		err := c.BindWith(&Payload, binding.FormPost)
+		if err != nil {
+
+			c.HTML(http.StatusBadRequest, "index.html", gin.H{
+				"PageTitle":  "Protokollamt der Freitagsrunde",
+				"MainTitle":  "Protokollamt",
+				"FatalError": "Verarbeitungsfehler. Bitte erneut versuchen.",
+			})
+			c.Abort()
+			return
+		}
+
+		Payload.Name = strings.TrimSpace(Payload.Name)
+
 		// Connect to LDAP service configured in
 		// protokollamt's config file.
 		l, err := ldap.Dial("tcp", ldapService.GetServiceAddr())
 		if err != nil {
+
 			log.Printf("Connecting to configured LDAP service failed: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"reason": "internal issue",
+
+			c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+				"PageTitle":  "Protokollamt der Freitagsrunde",
+				"MainTitle":  "Protokollamt",
+				"FatalError": "Verarbeitungsfehler. Bitte erneut versuchen.",
 			})
 			c.Abort()
 			return
@@ -61,9 +92,13 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 			InsecureSkipVerify: false,
 		})
 		if err != nil {
+
 			log.Printf("Upgrading LDAP connection to TLS failed: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"reason": "internal issue",
+
+			c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+				"PageTitle":  "Protokollamt der Freitagsrunde",
+				"MainTitle":  "Protokollamt",
+				"FatalError": "Verarbeitungsfehler. Bitte erneut versuchen.",
 			})
 			c.Abort()
 			return
@@ -71,13 +106,16 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 
 		// Bind with name of user and password supplied
 		// via validated login form values.
-		err = l.Bind(fmt.Sprintf("uid=%s,%s", "USER", ldapService.GetBindDN()), "PASSWORD")
+		err = l.Bind(fmt.Sprintf("uid=%s,%s", Payload.Name, ldapService.GetBindDN()), Payload.Password)
 		if err != nil {
 
 			// Check if user supplied invalid credentials.
 			if strings.Contains(err.Error(), "Code 49 \"Invalid Credentials\"") {
-				c.JSON(http.StatusBadRequest, gin.H{
-					"reason": "you provided wrong credentials",
+
+				c.HTML(http.StatusBadRequest, "index.html", gin.H{
+					"PageTitle":  "Protokollamt der Freitagsrunde",
+					"MainTitle":  "Protokollamt",
+					"FatalError": "Benutzername oder Passwort falsch.",
 				})
 				c.Abort()
 				return
@@ -85,16 +123,19 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 
 			// If not, this is an internal error.
 			log.Printf("Binding with supplied user name and password failed: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"reason": "internal issue",
+
+			c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+				"PageTitle":  "Protokollamt der Freitagsrunde",
+				"MainTitle":  "Protokollamt",
+				"FatalError": "Verarbeitungsfehler. Bitte erneut versuchen.",
 			})
 			c.Abort()
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"hello": "lol",
-		})
+		// Create a new session.
+
+		c.Redirect(http.StatusFound, "/protocols")
 	}
 }
 

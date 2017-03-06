@@ -59,9 +59,13 @@
                             <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                             {{ end }}
 
+                        </div>
+
+                        <div class = "form-group">
+
                             <div class = "col-xs-12">
 
-                                <input class = "form-control" id = "inputEmail" placeholder = "LDAP-Benutzername..." type = "text" name = "login-mail" {{ with .LoginData.Mail }} value = "{{ . }}" {{ end }} />
+                                <input class = "form-control" id = "inputName" placeholder = "LDAP-Benutzername..." type = "text" name = "login-name" {{ with .LoginData.Name }} value = "{{ . }}" {{ end }} />
 
                             </div>
 

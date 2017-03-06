@@ -5,10 +5,29 @@ import (
 	"os"
 	"strings"
 
+	"crypto/rand"
+	"encoding/base64"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
 )
+
+// generateRandomString asks the system's CSPRNG
+// for 64 random bytes and returns them encoded
+// as URL-safe base64.
+func generateRandomString() (string, error) {
+
+	b := make([]byte, 64)
+
+	// Read 64 bytes from crypto.Rand.
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
+	}
+
+	// Encode read random bytes as base64.
+	return base64.URLEncoding.EncodeToString(b), nil
+}
 
 // CheckFlags verifies that supplied flags are no
 // file system paths and point to existing files.
@@ -54,10 +73,21 @@ func LoadConfig(configName string, dbPassword string, mailPassword string) (*Con
 		return nil, fmt.Errorf("error decoding TOML config file: %v", err)
 	}
 
+	// Generate a new secret used for signing JSON
+	// Web Tokens (JWTs) issued to authenticate users.
+	secret, err := generateRandomString()
+	if err != nil {
+		return nil, fmt.Errorf("failed to read 64 bytes from random source: %v", err)
+	}
+	c.JWTSignSecret = secret
+
 	// Enrich config with sensitive password values
 	// retrieved prior to this function via .env files.
 	c.Database.Password = dbPassword
 	c.Mail.Password = mailPassword
+
+	// Initialize an empty user session store.
+	c.Sessions = make([]UserSession, 0, 10)
 
 	return c, nil
 }
