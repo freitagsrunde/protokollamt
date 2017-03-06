@@ -191,8 +191,11 @@ func IndexLogout() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, gin.H{
-			"hello": "lol",
-		})
+		// Set 'Protokollamt' cookie content togarbage
+		// and expiration date to a date in the past.
+		c.SetCookie("Protokollamt", "", -1, "", "", false, true)
+
+		// Redirect back to index page.
+		c.Redirect(http.StatusFound, "/")
 	}
 }
