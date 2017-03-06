@@ -4,23 +4,27 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"crypto/tls"
 	"net/http"
 
-	//"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"gopkg.in/ldap.v2"
 )
 
-// LDAPService specifies what functionality
+// SessionCreater specifies what functionality
 // is needed to communicate with and authenticate
-// against configured LDAP service.
-type LDAPService interface {
-	GetServiceAddr() string
-	GetServerName() string
-	GetBindDN() string
+// against configured LDAP service, and for creating
+// signed session objects.
+type SessionCreater interface {
+	GetJWTSigningSecret() string
+	GetJWTValidFor() time.Duration
+	GetLDAPServiceAddr() string
+	GetLDAPServerName() string
+	GetLDAPBindDN() string
 }
 
 // LoginPayload represents the values an user
@@ -29,6 +33,32 @@ type LDAPService interface {
 type LoginPayload struct {
 	Name     string `form:"login-name"`
 	Password string `form:"login-password"`
+}
+
+// CreateSession produces a JSON Web Token (JWT) with
+// authenticated claims based on supplied user values
+// and saves it inside the session storage.
+func CreateSession(name string, jwtSignSecret []byte, jwtValidFor time.Duration) (string, error) {
+
+	// Save current timestamp.
+	nowTime := time.Now()
+	expTime := nowTime.Add(jwtValidFor)
+
+	// Create a JWT with claims to identify user.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.MapClaims{
+		"iss": name,
+		"iat": nowTime.Unix(),
+		"nbf": nowTime.Add((-1 * time.Minute)).Unix(),
+		"exp": expTime.Unix(),
+	})
+
+	// Obtain the signed string.
+	signedToken, err := token.SignedString(jwtSignSecret)
+	if err != nil {
+		return "", fmt.Errorf("failed to create signed JWT string: %v", err)
+	}
+
+	return signedToken, nil
 }
 
 // Index delivers the first page of protokollamt,
@@ -47,7 +77,7 @@ func Index() gin.HandlerFunc {
 // IndexLogin accepts user supplied LDAP credentials,
 // asks the LDAP service to verify them, and creates
 // a new session for respective user.
-func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
+func IndexLogin(sessCreater SessionCreater) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -70,7 +100,7 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 
 		// Connect to LDAP service configured in
 		// protokollamt's config file.
-		l, err := ldap.Dial("tcp", ldapService.GetServiceAddr())
+		l, err := ldap.Dial("tcp", sessCreater.GetLDAPServiceAddr())
 		if err != nil {
 
 			log.Printf("Connecting to configured LDAP service failed: %v", err)
@@ -88,7 +118,7 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 		// Upgrade current unencrypted session with
 		// LDAP service to TLS with StartTLS.
 		err = l.StartTLS(&tls.Config{
-			ServerName:         ldapService.GetServerName(),
+			ServerName:         sessCreater.GetLDAPServerName(),
 			InsecureSkipVerify: false,
 		})
 		if err != nil {
@@ -106,7 +136,7 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 
 		// Bind with name of user and password supplied
 		// via validated login form values.
-		err = l.Bind(fmt.Sprintf("uid=%s,%s", Payload.Name, ldapService.GetBindDN()), Payload.Password)
+		err = l.Bind(fmt.Sprintf("uid=%s,%s", Payload.Name, sessCreater.GetLDAPBindDN()), Payload.Password)
 		if err != nil {
 
 			// Check if user supplied invalid credentials.
@@ -133,7 +163,23 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 			return
 		}
 
-		// Create a new session.
+		// Create a new session and obtain a signed JWT.
+		token, err := CreateSession(Payload.Name, []byte(sessCreater.GetJWTSigningSecret()), sessCreater.GetJWTValidFor())
+		if err != nil {
+
+			log.Printf("JWT creation failure: %v", err)
+
+			c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+				"PageTitle":  "Protokollamt der Freitagsrunde",
+				"MainTitle":  "Protokollamt",
+				"FatalError": "Verarbeitungsfehler. Bitte erneut versuchen.",
+			})
+			c.Abort()
+			return
+		}
+
+		// Insert cookie into client's headers.
+		c.SetCookie("Protokollamt", token, int(sessCreater.GetJWTValidFor()), "", "", false, true)
 
 		c.Redirect(http.StatusFound, "/protocols")
 	}

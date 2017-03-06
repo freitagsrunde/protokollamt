@@ -9,6 +9,11 @@ User = "protokollamt"
 DBName = "protokollamt"
 SSLMode = "disable"
 
+[JWT]
+# Time in seconds that a session object
+# should be valid for.
+ValidFor = 1800
+
 [LDAP]
 ServiceAddr = "ldap.example.org:389"
 ServerName = "ldap.example.org"

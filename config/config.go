@@ -1,16 +1,19 @@
 package config
 
+import (
+	"time"
+)
+
 // Config contains all directives necessary to
 // run a protokollamt application.
 type Config struct {
-	DeployStage   string
-	PublicAddr    string
-	ListenAddr    string
-	JWTSignSecret string `toml:"-"`
-	Database      Database
-	LDAP          LDAP
-	Mail          Mail
-	Sessions      []UserSession
+	DeployStage string
+	PublicAddr  string
+	ListenAddr  string
+	Database    Database
+	JWT         JWT
+	LDAP        LDAP
+	Mail        Mail
 }
 
 // Database specifies connection details to the
@@ -21,6 +24,13 @@ type Database struct {
 	Password    string `toml:"-"`
 	DBName      string
 	SSLMode     string
+}
+
+// JWT contains configuration values for use
+// of JSON Web Tokens.
+type JWT struct {
+	SigningSecret string `toml:"-"`
+	ValidFor      int
 }
 
 // LDAP holds configuration for authorizing users
@@ -39,27 +49,32 @@ type Mail struct {
 	Password    string `toml:"-"`
 }
 
-// UserSession represents an active authenticated
-// session of an user in protokollamt.
-type UserSession struct {
-	ID   string
-	Name string
+// GetJWTSignSecret returns the randomly generated
+// JWT signing secret.
+func (c *Config) GetJWTSigningSecret() string {
+	return c.JWT.SigningSecret
 }
 
-// Define a receiver to retrieve the config's
-// value for connecting to the LDAP service.
-func (c *Config) GetServiceAddr() string {
+// GetJWTSignSecret returns the randomly generated
+// JWT signing secret.
+func (c *Config) GetJWTValidFor() time.Duration {
+	return (time.Duration(c.JWT.ValidFor) * time.Second)
+}
+
+// GetServiceAddr is a receiver to retrieve the
+// config's LDAP service address.
+func (c *Config) GetLDAPServiceAddr() string {
 	return c.LDAP.ServiceAddr
 }
 
-// Define a receiver to retrieve the LDAP service's
-// server name for connecting with TLS.
-func (c *Config) GetServerName() string {
+// GetServerName is a receiver to retrieve the LDAP
+// service's server name for connecting with TLS.
+func (c *Config) GetLDAPServerName() string {
 	return c.LDAP.ServerName
 }
 
-// Define a receiver to retrieve defined part
+// GetBindDN is a receiver to retrieve defined part
 // of request dinstinguished name, BindDN.
-func (c *Config) GetBindDN() string {
+func (c *Config) GetLDAPBindDN() string {
 	return c.LDAP.BindDN
 }

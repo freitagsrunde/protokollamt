@@ -79,15 +79,12 @@ func LoadConfig(configName string, dbPassword string, mailPassword string) (*Con
 	if err != nil {
 		return nil, fmt.Errorf("failed to read 64 bytes from random source: %v", err)
 	}
-	c.JWTSignSecret = secret
+	c.JWT.SigningSecret = secret
 
 	// Enrich config with sensitive password values
 	// retrieved prior to this function via .env files.
 	c.Database.Password = dbPassword
 	c.Mail.Password = mailPassword
-
-	// Initialize an empty user session store.
-	c.Sessions = make([]UserSession, 0, 10)
 
 	return c, nil
 }
