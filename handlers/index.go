@@ -30,7 +30,7 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// Connect to LDAP service configured in
-		// by protokollamt config file.
+		// protokollamt's config file.
 		l, err := ldap.Dial("tcp", ldapService.GetServiceAddr())
 		if err != nil {
 			log.Printf("Connecting to configured LDAP service failed: %v", err)
@@ -65,7 +65,7 @@ func IndexLogin(ldapService LDAPService) gin.HandlerFunc {
 			// Check if user supplied invalid credentials.
 			if strings.Contains(err.Error(), "Code 49 \"Invalid Credentials\"") {
 				c.JSON(http.StatusBadRequest, gin.H{
-					"reason": "you are wrong",
+					"reason": "you provided wrong credentials",
 				})
 				c.Abort()
 				return
