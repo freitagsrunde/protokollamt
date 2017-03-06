@@ -17,7 +17,7 @@ func (c *Config) DefineRoutes() *gin.Engine {
 	router := gin.Default()
 
 	router.GET("/", middleware.NotAuthorized(), handlers.Index)
-	router.POST("/", middleware.NotAuthorized(), handlers.IndexLogin)
+	router.POST("/", middleware.NotAuthorized(), handlers.IndexLogin(c))
 	router.DELETE("/", middleware.Authorized(), handlers.IndexLogout)
 
 	router.GET("/protocols", middleware.Authorized(), handlers.Protocols)

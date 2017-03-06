@@ -4,16 +4,16 @@ PublicAddr = "127.0.0.1:6020"
 ListenAddr = "127.0.0.1:6020"
 
 [Database]
-Host = "127.0.0.1"
-Port = "5432"
+ServiceAddr = "127.0.0.1:5432"
 User = "protokollamt"
 DBName = "protokollamt"
 SSLMode = "disable"
 
 [LDAP]
-A = "B"
+ServiceAddr = "ldap.example.org:389"
+ServerName = "ldap.example.org"
+BindDN = "ou=users,dc=coolorg,dc=org"
 
 [Mail]
-Host = "127.0.0.1"
-Port = "587"
+ServiceAddr = "127.0.0.1:587"
 User = "protokollamt"
