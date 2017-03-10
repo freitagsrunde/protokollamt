@@ -1,80 +1,95 @@
 package config
 
 import (
-	"time"
+	"fmt"
+	"os"
+	"strings"
+
+	"crypto/rand"
+	"encoding/base64"
+	"path/filepath"
+
+	"github.com/BurntSushi/toml"
+	"github.com/freitagsrunde/protokollamt/models"
 )
 
-// Config contains all directives necessary to
-// run a protokollamt application.
-type Config struct {
-	DeployStage string
-	PublicAddr  string
-	ListenAddr  string
-	Database    Database
-	JWT         JWT
-	LDAP        LDAP
-	Mail        Mail
+// generateRandomString asks the system's CSPRNG
+// for 64 random bytes and returns them encoded
+// as URL-safe base64.
+func generateRandomString() (string, error) {
+
+	b := make([]byte, 64)
+
+	// Read 64 bytes from crypto.Rand.
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
+	}
+
+	// Encode read random bytes as base64.
+	return base64.URLEncoding.EncodeToString(b), nil
 }
 
-// Database specifies connection details to the
-// application's database.
-type Database struct {
-	ServiceAddr string
-	User        string
-	Password    string `toml:"-"`
-	DBName      string
-	SSLMode     string
+// CheckFlags verifies that supplied flags are no
+// file system paths and point to existing files.
+func CheckFlags(envName string, configName string) (string, string, error) {
+
+	// Check if envName contains a separator
+	// and fail if that is the case.
+	if strings.ContainsRune(envName, filepath.Separator) {
+		return "", "", fmt.Errorf("do not specify path but only name of environment file")
+	}
+
+	// Check if configName contains a separator
+	// and fail if that is the case.
+	if strings.ContainsRune(configName, filepath.Separator) {
+		return "", "", fmt.Errorf("do not specify path but only name of configuration file")
+	}
+
+	// Check if environment file exists.
+	_, err := os.Stat(envName)
+	if os.IsNotExist(err) {
+		return "", "", fmt.Errorf("specified environment file does not exist")
+	}
+
+	// Check if configuration file exists.
+	_, err = os.Stat(configName)
+	if os.IsNotExist(err) {
+		return "", "", fmt.Errorf("specified configuration file does not exist")
+	}
+
+	return envName, configName, nil
 }
 
-// JWT contains configuration values for use
-// of JSON Web Tokens.
-type JWT struct {
-	SigningSecret string `toml:"-"`
-	ValidFor      int
-}
+// LoadConfig expects a name for protokollamt's
+// configuration file. It attempts to parse its
+// contents into above configuration structs.
+func LoadConfig(configName string, dbPassword string, mailPassword string) (*models.Config, error) {
 
-// LDAP holds configuration for authorizing users
-// by means of a LDAP infrastructure.
-type LDAP struct {
-	ServiceAddr string
-	ServerName  string
-	BindDN      string
-}
+	c := new(models.Config)
 
-// Mail defines how a connected mail server can
-// be contacted for the purpose of sending protocols.
-type Mail struct {
-	ServiceAddr string
-	User        string
-	Password    string `toml:"-"`
-}
+	// Parse values from TOML file into struct.
+	_, err := toml.DecodeFile(configName, c)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding TOML config file: %v", err)
+	}
 
-// GetJWTSignSecret returns the randomly generated
-// JWT signing secret.
-func (c *Config) GetJWTSigningSecret() string {
-	return c.JWT.SigningSecret
-}
+	// Enrich config with sensitive password values
+	// retrieved prior to this function via .env files.
+	c.Database.Password = dbPassword
+	c.Mail.Password = mailPassword
 
-// GetJWTSignSecret returns the randomly generated
-// JWT signing secret.
-func (c *Config) GetJWTValidFor() time.Duration {
-	return (time.Duration(c.JWT.ValidFor) * time.Second)
-}
+	// Construct PostgreSQL connection string for
+	// more convenient later use.
+	c.Database.ConnString = fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=%s", c.Database.User, c.Database.Password, c.Database.ServiceAddr, c.Database.DBName, c.Database.SSLMode)
 
-// GetServiceAddr is a receiver to retrieve the
-// config's LDAP service address.
-func (c *Config) GetLDAPServiceAddr() string {
-	return c.LDAP.ServiceAddr
-}
+	// Generate a new secret used for signing JSON
+	// Web Tokens (JWTs) issued to authenticate users.
+	secret, err := generateRandomString()
+	if err != nil {
+		return nil, fmt.Errorf("failed to read 64 bytes from random source: %v", err)
+	}
+	c.JWT.SigningSecret = secret
 
-// GetServerName is a receiver to retrieve the LDAP
-// service's server name for connecting with TLS.
-func (c *Config) GetLDAPServerName() string {
-	return c.LDAP.ServerName
-}
-
-// GetBindDN is a receiver to retrieve defined part
-// of request dinstinguished name, BindDN.
-func (c *Config) GetLDAPBindDN() string {
-	return c.LDAP.BindDN
+	return c, nil
 }

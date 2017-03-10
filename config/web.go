@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/freitagsrunde/protokollamt/handlers"
 	"github.com/freitagsrunde/protokollamt/middleware"
+	"github.com/freitagsrunde/protokollamt/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,7 +11,7 @@ import (
 // router, defines the provided HTTP endpoints
 // of protokollamt, and declared where static
 // and template resources are located.
-func (c *Config) DefineRoutes() *gin.Engine {
+func DefineRoutes(c *models.Config) *gin.Engine {
 
 	// Depending on configured stage this application
 	// is deployed in, set log level of gin.
@@ -28,7 +29,7 @@ func (c *Config) DefineRoutes() *gin.Engine {
 	router.DELETE("/", middleware.Authorized(c), handlers.IndexLogout())
 
 	// Endpoint for listing recent protocols.
-	router.GET("/protocols", middleware.Authorized(c), handlers.Protocols())
+	router.GET("/protocols", middleware.Authorized(c), handlers.Protocols(c))
 
 	// Endpoints to add a new protocol.
 	router.GET("/protocols/new", middleware.Authorized(c), handlers.ProtocolsNew())

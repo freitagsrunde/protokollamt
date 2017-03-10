@@ -32,20 +32,24 @@ func main() {
 	}
 
 	// Load protokollamt configuration file.
-	config, err := config.LoadConfig(configName, os.Getenv("DB_PASSWORD"), os.Getenv("MAIL_PASSWORD"))
+	c, err := config.LoadConfig(configName, os.Getenv("DB_PASSWORD"), os.Getenv("MAIL_PASSWORD"))
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	// Check setup: LDAP connection, database
-	// connection, and mail sending capabilities.
+	// Connect to configured database and make sure
+	// required databases exist.
+	c.Database.Conn, err = config.OpenDatabase(c.Database.ConnString, c.DeployStage)
+	if err != nil {
+		log.Fatalf("Could not connect to database: %v", err)
+	}
 
 	// Initialize routes.
-	router := config.DefineRoutes()
+	router := config.DefineRoutes(c)
 
 	// Run application.
-	log.Printf("Protokollamt awaiting requests on %s.\n", config.PublicAddr)
-	err = router.Run(config.PublicAddr)
+	log.Printf("Protokollamt awaiting requests on %s.\n", c.PublicAddr)
+	err = router.Run(c.PublicAddr)
 	if err != nil {
 		log.Fatalf("Running protokollamt failed: %v", err)
 	}

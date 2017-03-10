@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+    {{ template "head" . }}
+
+    </head>
+
+    <body>
+
+        {{ template "navbar" . }}
+
+        <main class = "container-fluid">
+
+            <div class = "row">
+
+                {{ with .FatalError }}
+                <div class = "alert alert-danger"><b>{{ . }}</b></div>
+                {{ end }}
+                {{ range $key, $value := .Errors }}
+                <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
+                {{ end }}
+
+            </div>
+
+            <div class = "row">
+
+                {{ with .Protocols }}
+                <ul>
+                {{ range .}}
+                    <li>{{ .MeetingDate }} - <i>{{ .Status }}</i></li>
+                {{ end }}
+                </ul>
+                {{ else }}
+                <h3>Noch keine Protokolle hochgeladen!</h3>
+                {{ end }}
+
+            </div>
+
+        </main>
+
+        <script src = "/static/js/jquery.min.js"></script>
+        <script src = "/static/js/bootstrap.min.js"></script>
+
+    </body>
+
+</html>
