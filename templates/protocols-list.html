@@ -9,7 +9,7 @@
 
         {{ template "navbar" . }}
 
-        <main class = "container-fluid">
+        <main class = "container">
 
             <div class = "row">
 
@@ -25,13 +25,18 @@
             <div class = "row">
 
                 {{ with .Protocols }}
+                <h3 class = "col-xs-10 one-row-space">Letzte Protokolle:</h3>
+                {{ else }}
+                <h3 class = "col-xs-10 one-row-space">Noch keine Protokolle hochgeladen.</h3>
+                {{ end }}
+                <a href = "/protocols/new" class = "col-xs-2 btn btn-default">Hochladen</a>
+
+                {{ with .Protocols }}
                 <ul>
                 {{ range .}}
                     <li>{{ .MeetingDate }} - <i>{{ .Status }}</i></li>
                 {{ end }}
                 </ul>
-                {{ else }}
-                <h3>Noch keine Protokolle hochgeladen!</h3>
                 {{ end }}
 
             </div>

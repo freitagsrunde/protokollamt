@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+    {{ template "head" . }}
+    <link rel = "stylesheet" type = "text/css" href = "/static/css/bootstrap-datepicker3.min.css" />
+
+    </head>
+
+    <body>
+
+        {{ template "navbar" . }}
+
+        <main class = "container">
+
+            <div class = "row">
+
+                {{ with .FatalError }}
+                <div class = "alert alert-danger"><b>{{ . }}</b></div>
+                {{ end }}
+                {{ range $key, $value := .Errors }}
+                <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
+                {{ end }}
+
+                <h3>Neues Protokoll hochladen</h3>
+
+            </div>
+
+            <div class = "row">
+
+                <form action = "/protocols/new" action = "POST" class = "form-horizontal">
+
+                    <div class = "space-down">
+                        <div class = "input-group date">
+                            <input type = "text" name = "protocolDate" class = "form-control" placeholder = "Datum der Sitzung" />
+                            <span class = "input-group-addon"><i class = "glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+
+                    <div class = "space-down">
+                        <textarea name = "protocolContent" class = "form-control textarea-big" placeholder = "Protokoll der Sitzung"></textarea>
+                    </div>
+
+                    <div class = "space-down">
+                        <div class = "col-xs-offset-4 overflow">
+                            <button type = "submit" class = "col-xs-4 btn btn-primary">Hochladen</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </main>
+
+        <script src = "/static/js/jquery.min.js"></script>
+        <script src = "/static/js/bootstrap.min.js"></script>
+        <script src = "/static/js/bootstrap-datepicker.min.js"></script>
+        <script src = "/static/js/bootstrap-datepicker.de.min.js"></script>
+
+        <script type = "text/javascript">
+
+            $(".input-group.date").datepicker({
+                format: "dd.mm.yyyy",
+                todayBtn: "linked",
+                clearBtn: true,
+                language: "de",
+                multidate: false,
+                autoclose: true,
+                todayHighlight: true
+            });
+
+        </script>
+
+    </body>
+
+</html>

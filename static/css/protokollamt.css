@@ -13,10 +13,14 @@ main.container-fluid { margin: 0 15px; }
     padding-left: 0;
 }
 
+.no-space { margin: 0; }
 .row > .space-right { padding-right: 15px; }
 .row > .space-left { padding-left: 15px; }
 .space-down { padding-bottom: 15px; }
 .small-space-right { padding-right: 7px; }
+textarea.textarea-big { height: 400px; }
+.one-row-space { margin: 8px 0; }
+.overflow { overflow: hidden; }
 
 .headline { margin-bottom: 25px; }
 
@@ -25,7 +29,6 @@ main.container-fluid { margin: 0 15px; }
 
 #grayed-text { color: #999; }
 
-.dropdown-menu .no-space { margin: 0; }
 .table.with-bottomline { margin-bottom: 10px; }
 
 .center { text-align: center; }
