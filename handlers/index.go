@@ -10,6 +10,7 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/freitagsrunde/protokollamt/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"gopkg.in/ldap.v2"
@@ -190,12 +191,6 @@ func IndexLogin(sessCreater SessionCreater) gin.HandlerFunc {
 func IndexLogout() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-
-		// Set 'Protokollamt' cookie content togarbage
-		// and expiration date to a date in the past.
-		c.SetCookie("Protokollamt", "", -1, "", "", false, true)
-
-		// Redirect back to index page.
-		c.Redirect(http.StatusFound, "/")
+		middleware.CookieRemoveRedirect(c)
 	}
 }

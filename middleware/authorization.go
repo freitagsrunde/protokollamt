@@ -15,6 +15,20 @@ type JWTSigningSecretGetter interface {
 	GetJWTSigningSecret() string
 }
 
+// CookieRemoveRedirect deletes this application's
+// authentication cookie and redirects to index page.
+func CookieRemoveRedirect(c *gin.Context) {
+
+	// Instruct client to invalidate set cookie.
+	c.SetCookie("Protokollamt", "", -1, "", "", false, true)
+
+	// Redirect to index page.
+	c.Redirect(http.StatusFound, "/")
+
+	// Tell gin not to proceed in call stack.
+	c.Abort()
+}
+
 // NotAuthorized ensures that only clients with no
 // 'Protokollamt' cookie present continue to the index
 // page again. This allows to directly redirect to
@@ -46,8 +60,7 @@ func Authorized(jwtGetter JWTSigningSecretGetter) gin.HandlerFunc {
 		// Extract cookie containing JWT from request.
 		cookie, err := c.Request.Cookie("Protokollamt")
 		if err != nil {
-			c.Redirect(http.StatusFound, "/")
-			c.Abort()
+			CookieRemoveRedirect(c)
 			return
 		}
 
@@ -65,15 +78,13 @@ func Authorized(jwtGetter JWTSigningSecretGetter) gin.HandlerFunc {
 
 		// Check for parsing errors.
 		if err != nil {
-			c.Redirect(http.StatusFound, "/")
-			c.Abort()
+			CookieRemoveRedirect(c)
 			return
 		}
 
 		// Check if JWT is valid.
 		if token.Valid != true {
-			c.Redirect(http.StatusFound, "/")
-			c.Abort()
+			CookieRemoveRedirect(c)
 			return
 		}
 
@@ -81,8 +92,7 @@ func Authorized(jwtGetter JWTSigningSecretGetter) gin.HandlerFunc {
 		claims := token.Claims.(jwt.MapClaims)
 		err = claims.Valid()
 		if err != nil {
-			c.Redirect(http.StatusFound, "/")
-			c.Abort()
+			CookieRemoveRedirect(c)
 			return
 		}
 

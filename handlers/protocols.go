@@ -33,8 +33,9 @@ func ProtocolsNew() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, gin.H{
-			"hello": "lol",
+		c.HTML(http.StatusOK, "protocols-new.html", gin.H{
+			"PageTitle": "Protokollamt der Freitagsrunde",
+			"MainTitle": "Protokollamt",
 		})
 	}
 }
