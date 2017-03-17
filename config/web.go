@@ -33,7 +33,7 @@ func DefineRoutes(c *models.Config) *gin.Engine {
 
 	// Endpoints to add a new protocol.
 	router.GET("/protocols/new", middleware.Authorized(c), handlers.ProtocolsNew())
-	router.POST("/protocols/new", middleware.Authorized(c), handlers.ProtocolsNewUpload())
+	router.POST("/protocols/new", middleware.Authorized(c), handlers.ProtocolsNewUpload(c))
 
 	// Endpoints to review, change, and
 	// publish one specific protocol.

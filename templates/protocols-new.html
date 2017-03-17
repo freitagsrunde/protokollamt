@@ -20,24 +20,23 @@
                 {{ range $key, $value := .Errors }}
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
-
                 <h3>Neues Protokoll hochladen</h3>
 
             </div>
 
             <div class = "row">
 
-                <form action = "/protocols/new" action = "POST" class = "form-horizontal">
+                <form action = "/protocols/new" method = "POST" class = "form-horizontal">
 
                     <div class = "space-down">
                         <div class = "input-group date">
-                            <input type = "text" name = "protocolDate" class = "form-control" placeholder = "Datum der Sitzung" />
+                            <input type = "text" class = "form-control" placeholder = "Datum der Sitzung" name = "protocol-date" />
                             <span class = "input-group-addon"><i class = "glyphicon glyphicon-th"></i></span>
                         </div>
                     </div>
 
                     <div class = "space-down">
-                        <textarea name = "protocolContent" class = "form-control textarea-big" placeholder = "Protokoll der Sitzung"></textarea>
+                        <textarea class = "form-control textarea-big" placeholder = "Protokoll der Sitzung" name = "protocol-content"></textarea>
                     </div>
 
                     <div class = "space-down">

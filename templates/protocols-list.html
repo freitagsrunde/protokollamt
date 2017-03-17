@@ -19,17 +19,16 @@
                 {{ range $key, $value := .Errors }}
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
-
-            </div>
-
-            <div class = "row">
-
                 {{ with .Protocols }}
                 <h3 class = "col-xs-10 one-row-space">Letzte Protokolle:</h3>
                 {{ else }}
                 <h3 class = "col-xs-10 one-row-space">Noch keine Protokolle hochgeladen.</h3>
                 {{ end }}
                 <a href = "/protocols/new" class = "col-xs-2 btn btn-default">Hochladen</a>
+
+            </div>
+
+            <div class = "row">
 
                 {{ with .Protocols }}
                 <ul>
