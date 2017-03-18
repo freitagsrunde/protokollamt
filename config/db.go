@@ -8,7 +8,7 @@ import (
 
 // OpenDatabase attempts to connect to configured
 // PostgreSQL database and checks for connectivity.
-func OpenDatabase(connString string, deployStage string) (*gorm.DB, error) {
+func OpenDatabase(connString string, deployStage string, resetProt bool, resetRemv bool, resetRepl bool) (*gorm.DB, error) {
 
 	var db *gorm.DB
 	var err error
@@ -28,6 +28,24 @@ func OpenDatabase(connString string, deployStage string) (*gorm.DB, error) {
 	// If app runs in development mode, log SQL queries.
 	if deployStage == "dev" {
 		db.LogMode(true)
+	}
+
+	// If it was indicated to drop the protocols table,
+	// execute corresponding database command.
+	if resetProt {
+		db.DropTableIfExists(&models.Protocol{})
+	}
+
+	// If it was indicated to drop the removals table,
+	// execute corresponding database command.
+	if resetRemv {
+		db.DropTableIfExists(&models.Removal{})
+	}
+
+	// If it was indicated to drop the replacements table,
+	// execute corresponding database command.
+	if resetRepl {
+		db.DropTableIfExists(&models.Replacement{})
 	}
 
 	// Check if required tables are found.

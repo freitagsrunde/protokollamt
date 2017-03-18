@@ -16,6 +16,9 @@ func main() {
 	// for protokollamt.
 	envNameFlag := flag.String("envName", ".env", "Define name of protokollamt environment file. Providing a path will fail!")
 	configNameFlag := flag.String("configName", "config.toml", "Define name of protokollamt configuration file. Providing a path will fail!")
+	resetProtFlag := flag.Bool("resetProtocols", false, "Append this flag in order to drop protocols table to start fresh.")
+	resetRemvFlag := flag.Bool("resetRemovals", false, "Append this flag in order to drop removals table to start fresh.")
+	resetReplFlag := flag.Bool("resetReplacements", false, "Append this flag in order to drop replacements table to start fresh.")
 	flag.Parse()
 
 	// Check that flag values are no paths.
@@ -39,7 +42,7 @@ func main() {
 
 	// Connect to configured database and make sure
 	// required databases exist.
-	c.Database.Conn, err = config.OpenDatabase(c.Database.ConnString, c.DeployStage)
+	c.Database.Conn, err = config.OpenDatabase(c.Database.ConnString, c.DeployStage, *resetProtFlag, *resetRemvFlag, *resetReplFlag)
 	if err != nil {
 		log.Fatalf("Could not connect to database: %v", err)
 	}
