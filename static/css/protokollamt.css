@@ -4,6 +4,10 @@ html {
 }
 
 body { background-color: #fafafa; }
+h1 { font-size: 26px; }
+h2 { font-size: 23px; }
+h3 { font-size: 20px; }
+h4 { font-size: 17px; }
 
 main.container-fluid { margin: 0 15px; }
 .row { margin: 15px 0; }
@@ -21,7 +25,8 @@ main.container-fluid { margin: 0 15px; }
 .space-down { padding-bottom: 15px; }
 .small-space-right { padding-right: 7px; }
 .one-row-space { margin: 8px 0; }
-.glyphicon-space { padding-right: 7px; }
+.glyphicon-space-right { padding-right: 7px; }
+.glyphicon-space-left { padding-left: 7px; }
 main .row .two-col-left { padding-right: 5px; }
 main .row .two-col-right { padding-left: 5px; }
 
@@ -31,7 +36,6 @@ main .row .two-col-right { padding-left: 5px; }
 
 .center { text-align: center; }
 .right { text-align: right; }
-.small-title { font-size: 26px; }
 .large-item { font-size: 16px; }
 .bold { font-weight: bold; }
 .italic { font-style: italic; }
@@ -41,3 +45,18 @@ main .row .two-col-right { padding-left: 5px; }
     height: 400px;
     padding: 3px 5px;
 }
+
+#new-removal-form { display: none; }
+#new-replacement-form { display: none; }
+
+.form-col-wrapper {
+    width: 100%;
+    padding: 10px 0;
+    overflow: hidden;
+}
+
+.form-col-wrapper > [class*='col-'] { margin: 0; }
+.form-col-wrapper .left { padding: 0 5px 0 0; }
+.form-col-wrapper .middle { padding: 0 5px; }
+.form-col-wrapper .right { padding: 0 0 0 5px; }
+.form-col-wrapper .btn-primary { width: 100%; }

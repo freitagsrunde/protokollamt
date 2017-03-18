@@ -19,12 +19,12 @@
                 {{ range $key, $value := .Errors }}
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
-                <h1 class = "col-md-10 one-row-space small-title">{{ .MainTitle }}</h1>
+                <h1 class = "col-md-10 one-row-space">{{ .MainTitle }}</h1>
                 {{ if eq .Protocol.Status "In Review" }}
                 <button type = "button" class = "col-md-2 btn btn-primary">veröffentlichen</button>
                 {{ else }}
                 <button type = "button" class = "col-md-2 btn btn-primary" disabled = "disabled">
-                    <span class = "glyphicon glyphicon-ok glyphicon-space"></span>veröffentlicht
+                    <span class = "glyphicon glyphicon-ok glyphicon-space-right"></span>veröffentlicht
                 </button>
                 {{ end }}
 

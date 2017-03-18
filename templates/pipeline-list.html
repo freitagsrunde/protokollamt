@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+    {{ template "head" . }}
+
+    </head>
+
+    <body>
+
+        {{ template "navbar" . }}
+
+        <main class = "container">
+
+            <div class = "row">
+
+                {{ with .FatalError }}
+                <div class = "alert alert-danger"><b>{{ . }}</b></div>
+                {{ end }}
+                {{ range $key, $value := .Errors }}
+                <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
+                {{ end }}
+                <h1 class = "one-row-space">Pipeline</h1>
+
+            </div>
+
+            <div class = "row space-top">
+
+                <h3 class = "col-md-11 one-row-space">Löschen von Elementen <span class = "italic">intern → öffentlich</span></h3>
+                <button class = "col-md-1 btn btn-default" id = "new-removal">Neu<span class = "glyphicon glyphicon-menu-down glyphicon-space-left"></span></button>
+
+                <div id = "new-removal-form">
+
+                    <form action = "/pipeline/removals/add" method = "POST" class = "form-horizontal">
+                        <div class = "form-col-wrapper">
+                            <div class = "col-md-5 left form-group">
+                                <input type = "text" class = "form-control" name = "removal-start" placeholder = "Start-Zeichenkette (inklusive)..." />
+                            </div>
+                            <div class = "col-md-5 middle form-group">
+                                <input type = "text" class = "form-control" name = "removal-end" placeholder = "End-Zeichenkette (inklusive)..." />
+                            </div>
+                            <div class = "col-md-2 right form-group">
+                                <button type = "submit" class = "btn btn-primary">Hinzufügen</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                {{ with .Removals }}
+                {{ range . }}
+                <ul class = "space-top">
+                    <li class = "space-down">{{ .StartTag }} - {{ .EndTag }}</li>
+                </ul>
+                {{ end }}
+                {{ else }}
+                <h4>lol</h4>
+                {{ end }}
+
+            </div>
+
+            <div class = "row space-top">
+
+                <h3 class = "col-md-11 one-row-space">Ersetzen von Elementen <span class = "italic">intern → öffentlich</span></h3>
+                <button class = "col-md-1 btn btn-default" id = "new-replacement">Neu<span class = "glyphicon glyphicon-menu-down glyphicon-space-left"></span></button>
+
+                <div id = "new-replacement-form">
+
+                    <form action = "/pipeline/represents/add" method = "POST" class = "form-horizontal">
+                        <div class = "form-col-wrapper">
+                            <div class = "col-md-5 left form-group">
+                                <input type = "text" class = "form-control" name = "replacement-search" placeholder = "Suchen nach..." />
+                            </div>
+                            <div class = "col-md-5 middle form-group">
+                                <input type = "text" class = "form-control" name = "replacement-replace" placeholder = "Ersetzen durch..." />
+                            </div>
+                            <div class = "col-md-2 right form-group">
+                                <button type = "submit" class = "btn btn-primary">Hinzufügen</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                {{ with .Replacements }}
+                {{ range . }}
+                <ul class = "space-top">
+                    <li class = "space-down">{{ .SearchString }} - {{ .ReplaceString }}</li>
+                </ul>
+                {{ end }}
+                {{ else }}
+                <h4>rofl</h4>
+                {{ end }}
+
+            </div>
+
+        </main>
+
+    </body>
+
+    {{ template "footer" . }}
+    <script type = "text/javascript" charset = "utf-8">
+
+        $("#new-removal").click(function() {
+            $("#new-removal-form").toggle(400);
+        });
+
+        $("#new-replacement").click(function() {
+            $("#new-replacement-form").toggle(400);
+        });
+
+    </script>
+
+</html>

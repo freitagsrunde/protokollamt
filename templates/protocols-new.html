@@ -10,7 +10,7 @@
 
         {{ template "navbar" . }}
 
-        <main class = "container-fluid">
+        <main class = "container">
 
             <div class = "row">
 
@@ -20,7 +20,7 @@
                 {{ range $key, $value := .Errors }}
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
-                <h1 class = "small-title one-row-space">{{ .MainTitle }}</h1>
+                <h1 class = "one-row-space">{{ .MainTitle }}</h1>
 
             </div>
 

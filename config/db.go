@@ -31,11 +31,21 @@ func OpenDatabase(connString string, deployStage string) (*gorm.DB, error) {
 	}
 
 	// Check if required tables are found.
-	found := db.HasTable(&models.Protocol{})
+	foundProt := db.HasTable(&models.Protocol{})
+	foundRem := db.HasTable(&models.Removal{})
+	foundRep := db.HasTable(&models.Replacement{})
 
 	// If not, create them.
-	if found != true {
+	if foundProt != true {
 		db.CreateTable(&models.Protocol{})
+	}
+
+	if foundRem != true {
+		db.CreateTable(&models.Removal{})
+	}
+
+	if foundRep != true {
+		db.CreateTable(&models.Replacement{})
 	}
 
 	return db, nil

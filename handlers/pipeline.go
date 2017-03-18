@@ -3,15 +3,25 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/freitagsrunde/protokollamt/models"
 	"github.com/gin-gonic/gin"
 )
 
-func Pipeline() gin.HandlerFunc {
+func Pipeline(dbConner DBConner) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, gin.H{
-			"hello": "lol",
+		var Removals []models.Removal
+		dbConner.GetDBConn().Order("\"created\" desc").Find(&Removals)
+
+		var Replacements []models.Replacement
+		dbConner.GetDBConn().Order("\"created\" desc").Find(&Replacements)
+
+		c.HTML(http.StatusOK, "pipeline-list.html", gin.H{
+			"PageTitle":    "Protokollamt der Freitagsrunde - Analyse-Pipeline",
+			"MainTitle":    "Analyse-Pipeline",
+			"Removals":     Removals,
+			"Replacements": Replacements,
 		})
 	}
 }

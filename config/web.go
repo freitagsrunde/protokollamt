@@ -43,17 +43,15 @@ func DefineRoutes(c *models.Config) *gin.Engine {
 	router.GET("/protocols/view/:id/publish", middleware.Authorized(c), handlers.ProtocolsSinglePublish())
 
 	// Endpoint for listing existing pipeline steps.
-	router.GET("/pipeline", middleware.Authorized(c), handlers.Pipeline())
+	router.GET("/pipeline", middleware.Authorized(c), handlers.Pipeline(c))
 
 	// Endpoints for manipulating removal steps in
 	// analyze pipeline of protocols.
-	router.GET("/pipeline/removals/add", middleware.Authorized(c), handlers.PipelineRemovalsAdd())
 	router.POST("/pipeline/removals/add", middleware.Authorized(c), handlers.PipelineRemovalsAddSubmit())
 	router.DELETE("/pipeline/removals/view/:id", middleware.Authorized(c), handlers.PipelineRemovalsDelete())
 
 	// Endpoints for manipulating replacement steps
 	// in analyze pipeline of protocols.
-	router.GET("/pipeline/replacements/add", middleware.Authorized(c), handlers.PipelineReplacementsAdd())
 	router.POST("/pipeline/replacements/add", middleware.Authorized(c), handlers.PipelineReplacementsAddSubmit())
 	router.DELETE("/pipeline/replacements/view/:id", middleware.Authorized(c), handlers.PipelineReplacementsDelete())
 
