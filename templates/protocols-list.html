@@ -28,17 +28,17 @@
 
             </div>
 
+            {{ with .Protocols }}
             <div class = "row">
 
-                {{ with .Protocols }}
                 <ul>
                 {{ range .}}
-                    <li>{{ .MeetingDate }} - <i>{{ .Status }}</i></li>
+                    <li>{{ .MeetingDateString }} - <i>{{ .Status }}</i></li>
                 {{ end }}
                 </ul>
-                {{ end }}
 
             </div>
+            {{ end }}
 
         </main>
 

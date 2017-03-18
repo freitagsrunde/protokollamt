@@ -36,6 +36,12 @@ func Protocols(dbConner DBConner) gin.HandlerFunc {
 		var Protocols []models.Protocol
 		dbConner.GetDBConn().Find(&Protocols)
 
+		// Create nicely formatted strings for print
+		// in template output.
+		for i := range Protocols {
+			Protocols[i].MeetingDateString = Protocols[i].MeetingDate.Format("02.01.2006")
+		}
+
 		c.HTML(http.StatusOK, "protocols-list.html", gin.H{
 			"PageTitle": "Protokollamt der Freitagsrunde",
 			"MainTitle": "Protokollamt - Übersicht aller Protokolle",
