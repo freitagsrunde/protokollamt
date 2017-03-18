@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Settings() gin.HandlerFunc {
+func Pipeline() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -16,7 +16,7 @@ func Settings() gin.HandlerFunc {
 	}
 }
 
-func SettingsRemovalsDelete() gin.HandlerFunc {
+func PipelineRemovalsAdd() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -26,7 +26,7 @@ func SettingsRemovalsDelete() gin.HandlerFunc {
 	}
 }
 
-func SettingsReplacementsDelete() gin.HandlerFunc {
+func PipelineRemovalsAddSubmit() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -36,7 +36,7 @@ func SettingsReplacementsDelete() gin.HandlerFunc {
 	}
 }
 
-func SettingsRemovalsAdd() gin.HandlerFunc {
+func PipelineRemovalsDelete() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -46,7 +46,7 @@ func SettingsRemovalsAdd() gin.HandlerFunc {
 	}
 }
 
-func SettingsRemovalsAddSubmit() gin.HandlerFunc {
+func PipelineReplacementsAdd() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -56,7 +56,7 @@ func SettingsRemovalsAddSubmit() gin.HandlerFunc {
 	}
 }
 
-func SettingsReplacementsAdd() gin.HandlerFunc {
+func PipelineReplacementsAddSubmit() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -66,7 +66,7 @@ func SettingsReplacementsAdd() gin.HandlerFunc {
 	}
 }
 
-func SettingsReplacementsAddSubmit() gin.HandlerFunc {
+func PipelineReplacementsDelete() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 

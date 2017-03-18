@@ -42,15 +42,24 @@ func DefineRoutes(c *models.Config) *gin.Engine {
 	router.GET("/protocols/view/:id/reprocess", middleware.Authorized(c), handlers.ProtocolsSingleReprocess())
 	router.GET("/protocols/view/:id/publish", middleware.Authorized(c), handlers.ProtocolsSinglePublish())
 
-	router.GET("/settings", middleware.Authorized(c), handlers.Settings())
+	// Endpoint for listing existing pipeline steps.
+	router.GET("/pipeline", middleware.Authorized(c), handlers.Pipeline())
 
-	router.GET("/settings/removals/add", middleware.Authorized(c), handlers.SettingsRemovalsAdd())
-	router.POST("/settings/removals/add", middleware.Authorized(c), handlers.SettingsRemovalsAddSubmit())
-	router.DELETE("/settings/removals/view/:id", middleware.Authorized(c), handlers.SettingsRemovalsDelete())
+	// Endpoints for manipulating removal steps in
+	// analyze pipeline of protocols.
+	router.GET("/pipeline/removals/add", middleware.Authorized(c), handlers.PipelineRemovalsAdd())
+	router.POST("/pipeline/removals/add", middleware.Authorized(c), handlers.PipelineRemovalsAddSubmit())
+	router.DELETE("/pipeline/removals/view/:id", middleware.Authorized(c), handlers.PipelineRemovalsDelete())
 
-	router.GET("/settings/replacements/add", middleware.Authorized(c), handlers.SettingsReplacementsAdd())
-	router.POST("/settings/replacements/add", middleware.Authorized(c), handlers.SettingsReplacementsAddSubmit())
-	router.DELETE("/settings/replacements/view/:id", middleware.Authorized(c), handlers.SettingsReplacementsDelete())
+	// Endpoints for manipulating replacement steps
+	// in analyze pipeline of protocols.
+	router.GET("/pipeline/replacements/add", middleware.Authorized(c), handlers.PipelineReplacementsAdd())
+	router.POST("/pipeline/replacements/add", middleware.Authorized(c), handlers.PipelineReplacementsAddSubmit())
+	router.DELETE("/pipeline/replacements/view/:id", middleware.Authorized(c), handlers.PipelineReplacementsDelete())
+
+	// Endpoint for listing mail sending options
+	// when publishing a reviewed protocol.
+	router.GET("/mail", middleware.Authorized(c), handlers.Mail())
 
 	// Serve static files and HTML templates.
 	router.Static("/static", "./static")
