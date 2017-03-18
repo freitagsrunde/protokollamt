@@ -19,7 +19,7 @@
                 {{ range $key, $value := .Errors }}
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
-                <h3>{{ .MainTitle }}</h3>
+                <h1 class = "small-title">{{ .MainTitle }}</h1>
 
             </div>
 
@@ -43,9 +43,8 @@
 
         </main>
 
-        <script src = "/static/js/jquery.min.js"></script>
-        <script src = "/static/js/bootstrap.min.js"></script>
-
     </body>
+
+    {{ template "footer" . }}
 
 </html>

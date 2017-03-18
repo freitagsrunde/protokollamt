@@ -10,7 +10,7 @@
 
         {{ template "navbar" . }}
 
-        <main class = "container">
+        <main class = "container-fluid">
 
             <div class = "row">
 
@@ -20,7 +20,7 @@
                 {{ range $key, $value := .Errors }}
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
-                <h3>{{ .MainTitle }}</h3>
+                <h1 class = "small-title">{{ .MainTitle }}</h1>
 
             </div>
 
@@ -51,25 +51,25 @@
 
         </main>
 
-        <script src = "/static/js/jquery.min.js"></script>
-        <script src = "/static/js/bootstrap.min.js"></script>
-        <script src = "/static/js/bootstrap-datepicker.min.js"></script>
-        <script src = "/static/js/bootstrap-datepicker.de.min.js"></script>
-
-        <script type = "text/javascript">
-
-            $(".input-group.date").datepicker({
-                format: "dd.mm.yyyy",
-                todayBtn: "linked",
-                clearBtn: true,
-                language: "de",
-                multidate: false,
-                autoclose: true,
-                todayHighlight: true
-            });
-
-        </script>
-
     </body>
+
+    {{ template "footer" . }}
+
+    <script src = "/static/js/bootstrap-datepicker.min.js"></script>
+    <script src = "/static/js/bootstrap-datepicker.de.min.js"></script>
+
+    <script type = "text/javascript">
+
+    $(".input-group.date").datepicker({
+        format: "dd.mm.yyyy",
+        todayBtn: "linked",
+        clearBtn: true,
+        language: "de",
+        multidate: false,
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    </script>
 
 </html>

@@ -26,7 +26,7 @@ func DefineRoutes(c *models.Config) *gin.Engine {
 	// First page, login and logout.
 	router.GET("/", middleware.NotAuthorized(), handlers.Index())
 	router.POST("/", middleware.NotAuthorized(), handlers.IndexLogin(c))
-	router.DELETE("/", middleware.Authorized(c), handlers.IndexLogout())
+	router.GET("/logout", middleware.Authorized(c), handlers.IndexLogout())
 
 	// Endpoint for listing recent protocols.
 	router.GET("/protocols", middleware.Authorized(c), handlers.Protocols(c))

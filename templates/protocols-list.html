@@ -9,7 +9,7 @@
 
         {{ template "navbar" . }}
 
-        <main class = "container">
+        <main class = "container-fluid">
 
             <div class = "row">
 
@@ -20,20 +20,20 @@
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
                 {{ if .Protocols }}
-                <h3 class = "col-xs-10 one-row-space">{{ .MainTitle }}</h3>
+                <h1 class = "col-xs-10 small-title one-row-space">{{ .MainTitle }}</h1>
                 {{ else }}
-                <h3 class = "col-xs-10 one-row-space">Noch keine Protokolle hochgeladen.</h3>
+                <h1 class = "col-xs-10 small-title one-row-space">Noch keine Protokolle hochgeladen.</h1>
                 {{ end }}
-                <a href = "/protocols/new" class = "col-xs-2 btn btn-default">Hochladen</a>
+                <a href = "/protocols/new" class = "col-xs-2 btn btn-default">Neues Protokoll</a>
 
             </div>
 
             {{ with .Protocols }}
             <div class = "row">
 
-                <ul>
+                <ul class = "space-top">
                 {{ range .}}
-                    <li><a href = "/protocols/view/{{ .ID }}">{{ .MeetingDateString }}</a> - <i>{{ .Status }}</i></li>
+                    <li class = "large-item space-down"><a href = "/protocols/view/{{ .ID }}">{{ .Category }} vom {{ .MeetingDateString }}</a> - <i>{{ .Status }}</i></li>
                 {{ end }}
                 </ul>
 
@@ -42,9 +42,8 @@
 
         </main>
 
-        <script src = "/static/js/jquery.min.js"></script>
-        <script src = "/static/js/bootstrap.min.js"></script>
-
     </body>
+
+    {{ template "footer" . }}
 
 </html>

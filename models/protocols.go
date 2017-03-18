@@ -5,13 +5,13 @@ import "time"
 // Category denotes the type of a protocol
 // item. For example, being from one of the
 // Freitagsrunde's internal meetings.
-const CategoryFreitagssitzung string = "freitagssitzung"
+const CategoryFreitagssitzung string = "Freitagsrundensitzung"
 
 // Status represents the phase an uploaded
 // protocol is currently in. From 'in review'
 // to 'published'.
-const StatusInReview string = "review"
-const StatusPublished string = "published"
+const StatusInReview string = "In Review"
+const StatusPublished string = "Veröffentlicht"
 
 // Protocol represents an internal meeting protocol
 // to be reviewed and subsequently published by use
