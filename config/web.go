@@ -47,13 +47,13 @@ func DefineRoutes(c *models.Config) *gin.Engine {
 
 	// Endpoints for manipulating removal steps in
 	// analyze pipeline of protocols.
-	router.POST("/pipeline/removals/add", middleware.Authorized(c), handlers.PipelineRemovalsAddSubmit())
-	router.DELETE("/pipeline/removals/view/:id", middleware.Authorized(c), handlers.PipelineRemovalsDelete())
+	router.POST("/pipeline/removals/add", middleware.Authorized(c), handlers.PipelineRemovalsAdd(c))
+	router.DELETE("/pipeline/removals/view/:id", middleware.Authorized(c), handlers.PipelineRemovalsDelete(c))
 
 	// Endpoints for manipulating replacement steps
 	// in analyze pipeline of protocols.
-	router.POST("/pipeline/replacements/add", middleware.Authorized(c), handlers.PipelineReplacementsAddSubmit())
-	router.DELETE("/pipeline/replacements/view/:id", middleware.Authorized(c), handlers.PipelineReplacementsDelete())
+	router.POST("/pipeline/replacements/add", middleware.Authorized(c), handlers.PipelineReplacementsAdd(c))
+	router.DELETE("/pipeline/replacements/view/:id", middleware.Authorized(c), handlers.PipelineReplacementsDelete(c))
 
 	// Endpoint for listing mail sending options
 	// when publishing a reviewed protocol.
