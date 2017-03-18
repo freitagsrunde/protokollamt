@@ -19,24 +19,37 @@
                 {{ range $key, $value := .Errors }}
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
-                <h1 class = "small-title">{{ .MainTitle }}</h1>
-
-            </div>
-
-            <div class = "row">
-
-                {{ with .Protocol }}
-                <textarea class = "col-md-6 textarea-big" disabled = "disabled">{{ .InternalVersion }}</textarea>
-                <textarea class = "col-md-6 textarea-big">{{ .InternalVersion }}</textarea>
+                <h1 class = "col-md-10 one-row-space small-title">{{ .MainTitle }}</h1>
+                {{ if eq .Protocol.Status "In Review" }}
+                <button type = "button" class = "col-md-2 btn btn-primary">veröffentlichen</button>
+                {{ else }}
+                <button type = "button" class = "col-md-2 btn btn-primary" disabled = "disabled">
+                    <span class = "glyphicon glyphicon-ok glyphicon-space"></span>veröffentlicht
+                </button>
                 {{ end }}
 
             </div>
 
             <div class = "row">
 
-                <div class = "overflow">
-                    <button type = "submit" class = "col-md-offset-2 col-md-2 btn btn-primary">Erneut analysieren</button>
-                    <button type = "submit" class = "col-md-offset-4 col-md-2 btn btn-primary">Speichern</button>
+                <div class = "col-md-6 two-col-left space-top">
+
+                    <p class = "bold center">Interne Version</p>
+                    <textarea class = "textarea-big" disabled = "disabled">{{ .Protocol.InternalVersion }}</textarea>
+                    <div class = "overflow space-top">
+                        <button type = "submit" class = "col-md-4 col-md-offset-4 btn btn-primary">Erneut analysieren</button>
+                    </div>
+
+                </div>
+
+                <div class = "col-md-6 two-col-right space-top">
+
+                    <p class = "bold center">Öffentliche Version</p>
+                    <textarea class = "textarea-big">{{ .Protocol.InternalVersion }}</textarea>
+                    <div class = "overflow space-top">
+                        <button type = "submit" class = "col-md-4 col-md-offset-4 btn btn-primary">Speichern</button>
+                    </div>
+
                 </div>
 
             </div>
