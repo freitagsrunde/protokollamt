@@ -19,6 +19,14 @@ type NewRemovalPayload struct {
 	EndTag   string `form:"removal-end"`
 }
 
+// NewReplacementPayload represents the form data
+// needed to create a new replacement element in the
+// analysis pipeline.
+type NewReplacementPayload struct {
+	SearchString  string `form:"replacement-search"`
+	ReplaceString string `form:"replacement-replace"`
+}
+
 // Pipeline provides an overview list of all
 // configured removal and replacement elements
 // executed during the analysis pipeline.
@@ -88,13 +96,40 @@ func PipelineRemovalsDelete(dbConner DBConner) gin.HandlerFunc {
 	}
 }
 
+// PipelineReplacementsAdd expects a NewReplacementPayload
+// and adds described replacement element to database.
 func PipelineReplacementsAdd(dbConner DBConner) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, gin.H{
-			"hello": "lol",
-		})
+		var Payload NewReplacementPayload
+		var Replacement models.Replacement
+
+		// Parse replacement form data into above defined payload.
+		err := c.BindWith(&Payload, binding.FormPost)
+		if err != nil {
+			c.Redirect(http.StatusFound, "/pipeline")
+			c.Abort()
+			return
+		}
+
+		// Do not allow empty replacement elements.
+		if Payload.SearchString == "" || Payload.ReplaceString == "" {
+			c.Redirect(http.StatusFound, "/pipeline")
+			c.Abort()
+			return
+		}
+
+		// Fill new replacement element.
+		Replacement.ID = uuid.NewV4().String()
+		Replacement.Created = time.Now()
+		Replacement.SearchString = Payload.SearchString
+		Replacement.ReplaceString = Payload.ReplaceString
+
+		// Save replacement element to database.
+		dbConner.GetDBConn().Create(&Replacement)
+
+		c.Redirect(http.StatusFound, "/pipeline")
 	}
 }
 
