@@ -9,7 +9,7 @@
 
         {{ template "navbar" . }}
 
-        <main class = "container">
+        <main class = "container-fluid">
 
             <div class = "row">
 
@@ -19,26 +19,27 @@
                 {{ range $key, $value := .Errors }}
                 <div class = "alert alert-danger"><b>{{ $value }}: {{ $key }}</b></div>
                 {{ end }}
-                {{ if .Protocols }}
-                <h3 class = "col-xs-10 one-row-space">{{ .MainTitle }}</h3>
-                {{ else }}
-                <h3 class = "col-xs-10 one-row-space">Noch keine Protokolle hochgeladen.</h3>
-                {{ end }}
-                <a href = "/protocols/new" class = "col-xs-2 btn btn-default">Hochladen</a>
+                <h3>{{ .MainTitle }}</h3>
 
             </div>
 
-            {{ with .Protocols }}
             <div class = "row">
 
-                <ul>
-                {{ range .}}
-                    <li><a href = "/protocols/view/{{ .ID }}">{{ .MeetingDateString }}</a> - <i>{{ .Status }}</i></li>
+                {{ with .Protocol }}
+                <textarea class = "col-md-6 textarea-big" disabled = "disabled">{{ .InternalVersion }}</textarea>
+                <textarea class = "col-md-6 textarea-big">{{ .InternalVersion }}</textarea>
                 {{ end }}
-                </ul>
 
             </div>
-            {{ end }}
+
+            <div class = "row">
+
+                <div class = "overflow">
+                    <button type = "submit" class = "col-md-offset-2 col-md-2 btn btn-primary">Erneut analysieren</button>
+                    <button type = "submit" class = "col-md-offset-4 col-md-2 btn btn-primary">Speichern</button>
+                </div>
+
+            </div>
 
         </main>
 

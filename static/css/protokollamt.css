@@ -18,7 +18,6 @@ main.container-fluid { margin: 0 15px; }
 .row > .space-left { padding-left: 15px; }
 .space-down { padding-bottom: 15px; }
 .small-space-right { padding-right: 7px; }
-textarea.textarea-big { height: 400px; }
 .one-row-space { margin: 8px 0; }
 .overflow { overflow: hidden; }
 
@@ -33,3 +32,8 @@ textarea.textarea-big { height: 400px; }
 
 .center { text-align: center; }
 .right { text-align: right; }
+
+.row textarea.textarea-big {
+    height: 400px;
+    padding: 3px 5px;
+}

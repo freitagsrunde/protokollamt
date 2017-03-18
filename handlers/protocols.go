@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"log"
+	"fmt"
 	"strings"
 	"time"
 
@@ -34,7 +34,7 @@ func Protocols(dbConner DBConner) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		var Protocols []models.Protocol
-		dbConner.GetDBConn().Find(&Protocols)
+		dbConner.GetDBConn().Order("\"meeting_date\" desc").Find(&Protocols)
 
 		// Create nicely formatted strings for print
 		// in template output.
@@ -43,8 +43,8 @@ func Protocols(dbConner DBConner) gin.HandlerFunc {
 		}
 
 		c.HTML(http.StatusOK, "protocols-list.html", gin.H{
-			"PageTitle": "Protokollamt der Freitagsrunde",
-			"MainTitle": "Protokollamt - Übersicht aller Protokolle",
+			"PageTitle": "Protokollamt der Freitagsrunde - Übersicht aller Protokolle",
+			"MainTitle": "Übersicht aller Protokolle",
 			"Protocols": Protocols,
 		})
 	}
@@ -57,8 +57,8 @@ func ProtocolsNew() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		c.HTML(http.StatusOK, "protocols-new.html", gin.H{
-			"PageTitle": "Protokollamt der Freitagsrunde",
-			"MainTitle": "Protokollamt - Neues Protokoll hochladen",
+			"PageTitle": "Protokollamt der Freitagsrunde - Neues Protokoll hochladen",
+			"MainTitle": "Neues Protokoll hochladen",
 		})
 	}
 }
@@ -77,8 +77,8 @@ func ProtocolsNewUpload(dbConner DBConner) gin.HandlerFunc {
 		if err != nil {
 
 			c.HTML(http.StatusBadRequest, "protocols-new.html", gin.H{
-				"PageTitle":  "Protokollamt der Freitagsrunde",
-				"MainTitle":  "Protokollamt - Neues Protokoll hochladen",
+				"PageTitle":  "Protokollamt der Freitagsrunde - Neues Protokoll hochladen",
+				"MainTitle":  "Neues Protokoll hochladen",
 				"FatalError": "Verarbeitungsfehler. Bitte erneut versuchen.",
 			})
 			c.Abort()
@@ -103,8 +103,8 @@ func ProtocolsNewUpload(dbConner DBConner) gin.HandlerFunc {
 		if len(errs) > 0 {
 
 			c.HTML(http.StatusBadRequest, "protocols-new.html", gin.H{
-				"PageTitle": "Protokollamt der Freitagsrunde",
-				"MainTitle": "Protokollamt - Neues Protokoll hochladen",
+				"PageTitle": "Protokollamt der Freitagsrunde - Neues Protokoll hochladen",
+				"MainTitle": "Neues Protokoll hochladen",
 				"Errors":    errs,
 			})
 			c.Abort()
@@ -114,11 +114,10 @@ func ProtocolsNewUpload(dbConner DBConner) gin.HandlerFunc {
 		// Attempt to parse time from form.
 		meetingDate, err := time.Parse("02.01.2006", Payload.Date)
 		if err != nil {
-			log.Println(err.Error())
 
 			c.HTML(http.StatusBadRequest, "protocols-new.html", gin.H{
-				"PageTitle":  "Protokollamt der Freitagsrunde",
-				"MainTitle":  "Protokollamt - Neues Protokoll hochladen",
+				"PageTitle":  "Protokollamt der Freitagsrunde - Neues Protokoll hochladen",
+				"MainTitle":  "Neues Protokoll hochladen",
 				"FatalError": "Verarbeitungsfehler. Bitte erneut versuchen.",
 			})
 			c.Abort()
@@ -141,12 +140,34 @@ func ProtocolsNewUpload(dbConner DBConner) gin.HandlerFunc {
 	}
 }
 
-func ProtocolsSingle() gin.HandlerFunc {
+// ProtocolsSingle provides detail and review
+// capabilities for a specific protocol.
+func ProtocolsSingle(dbConner DBConner) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, gin.H{
-			"hello": "lol",
+		// Obtain ID of requested protocol.
+		protocolID := c.Param("id")
+
+		var Protocol models.Protocol
+		dbConner.GetDBConn().Where("\"id\" = ?", protocolID).First(&Protocol)
+
+		// If no result could be found for provided
+		// protocol ID, redirect back to listing page.
+		if Protocol.ID == "" {
+			c.Redirect(http.StatusFound, "/protocols")
+			c.Abort()
+			return
+		}
+
+		// Create nicely formatted strings for print
+		// in template output.
+		Protocol.MeetingDateString = Protocol.MeetingDate.Format("02.01.2006")
+
+		c.HTML(http.StatusOK, "protocols-view.html", gin.H{
+			"PageTitle": fmt.Sprintf("Protokollamt der Freitagsrunde - Protokoll vom %s", Protocol.MeetingDateString),
+			"MainTitle": fmt.Sprintf("Protokoll vom %s", Protocol.MeetingDateString),
+			"Protocol":  Protocol,
 		})
 	}
 }

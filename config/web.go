@@ -37,7 +37,7 @@ func DefineRoutes(c *models.Config) *gin.Engine {
 
 	// Endpoints to review, change, and
 	// publish one specific protocol.
-	router.GET("/protocols/view/:id", middleware.Authorized(c), handlers.ProtocolsSingle())
+	router.GET("/protocols/view/:id", middleware.Authorized(c), handlers.ProtocolsSingle(c))
 	router.POST("/protocols/view/:id", middleware.Authorized(c), handlers.ProtocolsSingleChange())
 	router.GET("/protocols/view/:id/reprocess", middleware.Authorized(c), handlers.ProtocolsSingleReprocess())
 	router.GET("/protocols/view/:id/publish", middleware.Authorized(c), handlers.ProtocolsSinglePublish())
