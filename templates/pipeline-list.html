@@ -26,7 +26,7 @@
             <div class = "row space-top">
 
                 <h3 class = "col-md-11 one-row-space">Löschen von Elementen <span class = "italic">intern → öffentlich</span></h3>
-                <button class = "col-md-1 btn btn-default" id = "new-removal">Neu<span class = "glyphicon glyphicon-menu-down glyphicon-space-left"></span></button>
+                <button class = "col-md-1 btn btn-default" id = "new-removal">Neu<span class = "glyphicon glyphicon-menu-down small-space-left"></span></button>
 
                 <div id = "new-removal-form">
 
@@ -46,14 +46,18 @@
 
                 </div>
 
+            </div>
+
+            <div class = "row space-top space-down">
+
                 {{ with .Removals }}
                 {{ range . }}
-                <ul class = "space-top">
-                    <li class = "space-down">{{ .StartTag }} - {{ .EndTag }}</li>
+                <ul>
+                    <li class = "space-down"><code class = "tiny-space-right">{{ .StartTag }}</code><span class = "italic">Dieser Text wird gelöscht.</span><code class = "tiny-space-left">{{ .EndTag }}</code></li>
                 </ul>
                 {{ end }}
                 {{ else }}
-                <h4>lol</h4>
+                <h4>Noch keine Löschungselemente definiert.</h4>
                 {{ end }}
 
             </div>
@@ -61,7 +65,7 @@
             <div class = "row space-top">
 
                 <h3 class = "col-md-11 one-row-space">Ersetzen von Elementen <span class = "italic">intern → öffentlich</span></h3>
-                <button class = "col-md-1 btn btn-default" id = "new-replacement">Neu<span class = "glyphicon glyphicon-menu-down glyphicon-space-left"></span></button>
+                <button class = "col-md-1 btn btn-default" id = "new-replacement">Neu<span class = "glyphicon glyphicon-menu-down small-space-left"></span></button>
 
                 <div id = "new-replacement-form">
 
@@ -81,14 +85,18 @@
 
                 </div>
 
+            </div>
+
+            <div class = "row space-top space-down">
+
                 {{ with .Replacements }}
                 {{ range . }}
-                <ul class = "space-top">
-                    <li class = "space-down">{{ .SearchString }} - {{ .ReplaceString }}</li>
+                <ul>
+                    <li class = "space-down"><code class = "tiny-space-right">{{ .SearchString }}</code> → <code class = "tiny-space-left">{{ .ReplaceString }}</code></li>
                 </ul>
                 {{ end }}
                 {{ else }}
-                <h4>rofl</h4>
+                <h4>Noch keine Ersetzungselemente definiert.</h4>
                 {{ end }}
 
             </div>
