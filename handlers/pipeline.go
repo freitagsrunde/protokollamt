@@ -86,13 +86,31 @@ func PipelineRemovalsAdd(dbConner DBConner) gin.HandlerFunc {
 	}
 }
 
+// PipelineRemovalsDelete removes the specified
+// removal element from database, if existent.
 func PipelineRemovalsDelete(dbConner DBConner) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, gin.H{
-			"hello": "lol",
-		})
+		// Obtain ID of requested removal element.
+		removalID := c.Param("id")
+
+		var Removal models.Removal
+		dbConner.GetDBConn().Where("\"id\" = ?", removalID).First(&Removal)
+
+		// If no result could be found for provided
+		// removal ID, redirect back to pipeline page.
+		if Removal.ID == "" {
+			c.Redirect(http.StatusFound, "/pipeline")
+			c.Abort()
+			return
+		}
+
+		// Now we are sure that requested removal element
+		// exists, therefore we can safely delete it.
+		dbConner.GetDBConn().Delete(&Removal)
+
+		c.Redirect(http.StatusFound, "/pipeline")
 	}
 }
 
@@ -133,12 +151,30 @@ func PipelineReplacementsAdd(dbConner DBConner) gin.HandlerFunc {
 	}
 }
 
+// PipelineReplacementsDelete removes the specified
+// replacement element from database, if existent.
 func PipelineReplacementsDelete(dbConner DBConner) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		c.JSON(http.StatusOK, gin.H{
-			"hello": "lol",
-		})
+		// Obtain ID of requested replacement element.
+		replacementID := c.Param("id")
+
+		var Replacement models.Replacement
+		dbConner.GetDBConn().Where("\"id\" = ?", replacementID).First(&Replacement)
+
+		// If no result could be found for provided
+		// replacement ID, redirect back to pipeline page.
+		if Replacement.ID == "" {
+			c.Redirect(http.StatusFound, "/pipeline")
+			c.Abort()
+			return
+		}
+
+		// Now we are sure that requested replacement element
+		// exists, therefore we can safely delete it.
+		dbConner.GetDBConn().Delete(&Replacement)
+
+		c.Redirect(http.StatusFound, "/pipeline")
 	}
 }

@@ -53,7 +53,14 @@
                 {{ with .Removals }}
                 {{ range . }}
                 <ul>
-                    <li class = "space-down"><code class = "tiny-space-right">{{ .StartTag }}</code><span class = "italic">Dieser Text wird gelöscht.</span><code class = "tiny-space-left">{{ .EndTag }}</code></li>
+                    <li class = "space-down">
+                        <code class = "tiny-space-right">{{ .StartTag }}</code>
+                        <span class = "italic">Dieser Text wird gelöscht.</span>
+                        <code class = "tiny-space-left">{{ .EndTag }}</code>
+                        <a href = "/pipeline/removals/delete/{{ .ID }}" class = "btn btn-default btn-remove" role = "button">
+                            <span class = "glyphicon glyphicon-remove"></span>
+                        </a>
+                    </li>
                 </ul>
                 {{ end }}
                 {{ else }}
@@ -92,7 +99,12 @@
                 {{ with .Replacements }}
                 {{ range . }}
                 <ul>
-                    <li class = "space-down"><code class = "tiny-space-right">{{ .SearchString }}</code> → <code class = "tiny-space-left">{{ .ReplaceString }}</code></li>
+                    <li class = "space-down">
+                        <code class = "tiny-space-right">{{ .SearchString }}</code> → <code class = "tiny-space-left">{{ .ReplaceString }}</code>
+                        <a href = "/pipeline/replacements/delete/{{ .ID }}" class = "btn btn-default btn-remove" role = "button">
+                            <span class = "glyphicon glyphicon-remove"></span>
+                        </a>
+                    </li>
                 </ul>
                 {{ end }}
                 {{ else }}

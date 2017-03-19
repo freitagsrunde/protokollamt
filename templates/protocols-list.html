@@ -33,7 +33,7 @@
 
                 <ul class = "space-top">
                 {{ range .}}
-                    <li class = "large-item space-down"><a href = "/protocols/view/{{ .ID }}">{{ .Category }} vom {{ .MeetingDateString }}</a> - <i>{{ .Status }}</i></li>
+                    <li class = "large-item space-down"><a href = "/protocols/view/{{ .ID }}">{{ .Category }} vom {{ .MeetingDateString }}</a> - <span class = "italic">{{ .Status }}</span></li>
                 {{ end }}
                 </ul>
 
