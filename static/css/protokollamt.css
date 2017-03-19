@@ -67,3 +67,8 @@ main .row .two-col-right { padding-left: 5px; }
     margin: 0 0 0 10px;
     padding: 3px 5px 1px;
 }
+
+div.tooltip-inner {
+    max-width: 500px;
+    padding: 13px 10px 14px;
+}
